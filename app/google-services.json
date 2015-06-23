@@ -1,0 +1,46 @@
+{
+  "project_info":{
+    "project_id":"uch-sisp-client",
+    "project_number":"130386124336",
+    "name":"uch-sisp-client"
+  },
+
+  "client":[{
+    "client_info":
+    {
+      "client_id":"android:com.uch.sisp.client",
+      "client_type":1,
+      "android_client_info":
+      {
+        "package_name":"com.uch.sisp.client"
+      }
+    },
+    "oauth_client":[],
+    "services":
+    {
+      "analytics_service":
+      {
+        "status":1
+      },
+      "cloud_messaging_service":
+      {
+        "status":2,
+        "apns_config":[]
+      },
+      "appinvite_service":
+      {
+        "status":1,
+        "other_platform_oauth_client":[]
+      },
+
+      "google_signin_service":
+      {
+        "status":1
+      },
+      "ads_service":
+      {
+        "status":1
+      }
+    }
+  }]
+}
