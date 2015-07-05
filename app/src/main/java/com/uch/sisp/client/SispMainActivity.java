@@ -1,5 +1,7 @@
 package com.uch.sisp.client;
 
+import static com.uch.sisp.client.config.IntentConstants.*;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,18 +9,16 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.uch.sisp.client.gcm.GCMPreferences;
+import com.uch.sisp.client.account.GoogleAccountHelper;
+import com.uch.sisp.client.config.SharedPreferencesConstants;
 import com.uch.sisp.client.gcm.GCMRegistrationIntentService;
 
 
@@ -44,7 +44,7 @@ public class SispMainActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences =
                         PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sharedPreferences
-                        .getBoolean(GCMPreferences.SENT_TOKEN_TO_SERVER, false);
+                        .getBoolean(SharedPreferencesConstants.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
                     mInformationTextView.setText(getString(R.string.gcm_send_message));
                 } else {
@@ -55,8 +55,9 @@ public class SispMainActivity extends AppCompatActivity {
         mInformationTextView = (TextView) findViewById(R.id.informationTextView);
 
         if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
+            // Inicia un IntentService para registar en GCM la aplicación.
             Intent intent = new Intent(this, GCMRegistrationIntentService.class);
+            intent.putExtra(EMAIL_INTENT_PARAMETER, GoogleAccountHelper.getPrincipalEmailAccount(this));
             startService(intent);
         }
     }
@@ -65,7 +66,7 @@ public class SispMainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(GCMPreferences.REGISTRATION_COMPLETE));
+                new IntentFilter(SharedPreferencesConstants.REGISTRATION_COMPLETE));
     }
 
     @Override

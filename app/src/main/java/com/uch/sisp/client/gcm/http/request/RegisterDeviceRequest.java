@@ -9,7 +9,7 @@ import lombok.Setter;
 /**
  * Created by lucas on 23/06/15.
  */
-@Getter @Setter @Builder
+@Getter @Setter
 public class RegisterDeviceRequest implements Serializable
 {
     private int id;
