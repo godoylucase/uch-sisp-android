@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.uch.sisp.client"
-        minSdkVersion 9
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -19,9 +19,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-//        debug {
-//            debuggable true
-//        }
+
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'

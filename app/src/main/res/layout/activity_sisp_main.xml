@@ -8,23 +8,15 @@
     android:orientation="vertical" tools:context=".SispMainActivity"
     android:id="@+id/mainLayout">
 
-    <TextView android:text="@string/registering_message" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/informationTextView"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/registrationProgressBar" />
-
     <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/string_panic_button"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="@string/button_panic_text"
         android:id="@+id/button_panic"
-        android:layout_gravity="center"
+        android:layout_gravity="fill_horizontal|center"
         android:clickable="false"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_row="80"
+        android:layout_column="0" />
 
 </GridLayout>

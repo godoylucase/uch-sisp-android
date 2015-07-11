@@ -7,19 +7,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.uch.sisp.client.account.GoogleAccountHelper;
 import com.uch.sisp.client.config.SharedPreferencesConstants;
+import com.uch.sisp.client.exception.NotLocalizableDeviceException;
 import com.uch.sisp.client.gcm.GCMRegistrationIntentService;
+import com.uch.sisp.client.location.LocationHelper;
 
 
 public class SispMainActivity extends AppCompatActivity {
@@ -28,45 +32,59 @@ public class SispMainActivity extends AppCompatActivity {
     private static final String TAG = "SispMainActivity";
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private ProgressBar mRegistrationProgressBar;
-    private TextView mInformationTextView;
+    private Toast toastInfoMessage;
+    private LocationHelper locationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sisp_main);
+        locationHelper = new LocationHelper((LocationManager)getSystemService(LOCATION_SERVICE), this);
 
-        mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-                SharedPreferences sharedPreferences =
-                        PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences
-                        .getBoolean(SharedPreferencesConstants.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
-                    mInformationTextView.setText(getString(R.string.gcm_send_message));
-                } else {
-                    mInformationTextView.setText(getString(R.string.token_error_message));
+        try {
+            // Al iniciar chequea que GPS y Localización por red estén disponibles
+            locationHelper.checkIfDeviceIsLocalizable();
+
+            // BroadcasReceiver se dispara tras recibir el token de GCM y ser enviado al server SISP
+            mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    SharedPreferences sharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(context);
+                    boolean sentToken = sharedPreferences
+                            .getBoolean(SharedPreferencesConstants.SENT_TOKEN_TO_SERVER, false);
+                    if (sentToken) {
+                        toastInfoMessage.makeText(getApplicationContext(), getString(R.string.gcm_send_message), Toast.LENGTH_LONG);
+                    } else {
+                        toastInfoMessage.makeText(getApplicationContext(), getString(R.string.token_error_message), Toast.LENGTH_LONG);
+                    }
                 }
-            }
-        };
-        mInformationTextView = (TextView) findViewById(R.id.informationTextView);
+            };
 
-        if (checkPlayServices()) {
-            // Inicia un IntentService para registar en GCM la aplicación.
-            Intent intent = new Intent(this, GCMRegistrationIntentService.class);
-            intent.putExtra(EMAIL_INTENT_PARAMETER, GoogleAccountHelper.getPrincipalEmailAccount(this));
-            startService(intent);
+            if (checkPlayServices()) {
+                // Inicia un IntentService para registar en GCM la aplicación.
+                Intent intent = new Intent(this, GCMRegistrationIntentService.class);
+                intent.putExtra(EMAIL_INTENT_PARAMETER, GoogleAccountHelper.getPrincipalEmailAccount(this));
+                startService(intent);
+            }
+        } catch (NotLocalizableDeviceException e) {
+            //TODO: implementar la salida de dispositivo incompatible
+            e.printStackTrace();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(SharedPreferencesConstants.REGISTRATION_COMPLETE));
+        try {
+            locationHelper.closeAlertDialog();
+            locationHelper.checkIfDeviceIsLocalizable();
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(SharedPreferencesConstants.REGISTRATION_COMPLETE));
+        } catch (NotLocalizableDeviceException e) {
+            //TODO: implementar la salida de dispositivo incompatible
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -76,9 +94,7 @@ public class SispMainActivity extends AppCompatActivity {
     }
 
     /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
+     * @return
      */
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
@@ -87,7 +103,7 @@ public class SispMainActivity extends AppCompatActivity {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.i(TAG, "Éste dispositivo no es soportado");
                 finish();
             }
             return false;
@@ -95,4 +111,21 @@ public class SispMainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_sisp_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_ajustes:
+                // TODO: implementar llamada a activity  SISP de configuracion
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }
