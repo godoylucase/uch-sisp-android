@@ -121,7 +121,7 @@ public class SispMainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_ajustes:
-                // TODO: implementar llamada a activity  SISP de configuracion
+                startActivity(new Intent(SispMainActivity.this, SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,0 +1,18 @@
+<resources>
+    <string name="title_activity_settings">Ajustes</string>
+
+    <!-- Config para proveedor de localización -->
+    <string name="pref_title_default_locator_provider">Proveedor Localización</string>
+    <string-array name="pref_list_locator_providers">
+        <item>GPS</item>
+        <item>Red Móvil</item>
+    </string-array>
+    <string-array name="pref_list_locator_providers_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Config para email de usuario -->
+    <string name="pref_title_user_email">Ingrese Email</string>
+
+</resources>
