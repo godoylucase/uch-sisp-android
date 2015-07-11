@@ -22,6 +22,7 @@ import com.uch.sisp.client.gcm.http.response.RegisterDeviceResponse;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -88,26 +89,41 @@ public class GCMRegistrationIntentService extends IntentService {
      * @param intent
      */
     private void sendRegistrationToServer(String token, SharedPreferences sharedPreferences, Intent intent) {
-        RegisterDeviceRequest request = new RegisterDeviceRequest();
-        int deviceId = sharedPreferences.getInt(SISP_DEVICE_ID, 0);
-        if(deviceId != 0) {
-            request.setId(deviceId);
-        } else {
-            request.setEmail(intent.getStringExtra(EMAIL_INTENT_PARAMETER));
-        }
-        request.setRegisterId(token);
+        RegisterDeviceRequest request = prepareRegisterGCMDeviceRequest(token, sharedPreferences, intent);
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         HttpEntity<?> httpEntity = new HttpEntity<RegisterDeviceRequest>(request);
+
         try {
             ResponseEntity<RegisterDeviceResponse> response = restTemplate.exchange(SISP_SERVICE_REGISTER_GCM_DEVICE, HttpMethod.POST, httpEntity, RegisterDeviceResponse.class);
             Log.d("SISP Response: ", response.getStatusCode().toString());
             RegisterDeviceResponse responseBody = (RegisterDeviceResponse) response.getBody();
-            sharedPreferences.edit().putInt(SISP_DEVICE_ID, responseBody.getId()).apply();
+            if(response.getStatusCode() == HttpStatus.CREATED) {
+                sharedPreferences.edit().putInt(SISP_DEVICE_ID, responseBody.getId()).apply();
+                sharedPreferences.edit().putString(USER_EMAIL, responseBody.getEmail()).apply();
+            }
         } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
+
+    private RegisterDeviceRequest prepareRegisterGCMDeviceRequest(String token, SharedPreferences sharedPreferences, Intent intent){
+        RegisterDeviceRequest request = new RegisterDeviceRequest();
+        String hardCodedEmail = sharedPreferences.getString(USER_EMAIL, null);
+        int deviceId = sharedPreferences.getInt(SISP_DEVICE_ID, 0);
+        if(deviceId != 0) {
+            request.setId(deviceId);
+        } else {
+            if(hardCodedEmail == null){
+                request.setEmail(intent.getStringExtra(EMAIL_INTENT_PARAMETER));
+            }
+            else {
+                request.setEmail(hardCodedEmail);
+            }
+        }
+        request.setRegisterId(token);
+        return request;
     }
 
     /**
