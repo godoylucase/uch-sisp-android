@@ -6,4 +6,5 @@ package com.uch.sisp.client.config;
 public class IntentConstants {
 
     public static final String EMAIL_INTENT_PARAMETER = "principalEmail";
+    public static final String LOCATION_LISTENER_INSTANCE_PARAMETER = "locationListenerInstance";
 }

@@ -14,6 +14,10 @@
     <!-- botones y controladores-->
     <string name="button_panic_text">Pánico</string>
 
+    <!-- textos -->
+    <string name="text_view_latitud">Latitud: (sin_datos)</string>
+    <string name="text_view_longitud">Longitud: (sin_datos)</string>
+
     <!-- menues -->
     <string name="menu_ajustes_text">Ajustes</string>
 

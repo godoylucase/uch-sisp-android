@@ -62,10 +62,6 @@ public class GCMRegistrationIntentService extends IntentService {
                 // Subscribe to topic channels
                 subscribeTopics(token);
 
-                // You should store a boolean that indicates whether the generated token has been
-                // sent to your server. If the boolean is false, send the token to your server,
-                // otherwise your server should have already received the token.
-                sharedPreferences.edit().putBoolean(SharedPreferencesConstants.SENT_TOKEN_TO_SERVER, true).apply();
                 // [END get_token]
             }
         } catch (Exception e) {
@@ -102,6 +98,7 @@ public class GCMRegistrationIntentService extends IntentService {
             if(response.getStatusCode() == HttpStatus.CREATED) {
                 sharedPreferences.edit().putInt(SISP_DEVICE_ID, responseBody.getId()).apply();
                 sharedPreferences.edit().putString(USER_EMAIL, responseBody.getEmail()).apply();
+                sharedPreferences.edit().putBoolean(SharedPreferencesConstants.SENT_TOKEN_TO_SERVER, true).apply();
             }
         } catch (Throwable e) {
             e.printStackTrace();

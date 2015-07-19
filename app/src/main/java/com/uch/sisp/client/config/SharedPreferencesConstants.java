@@ -8,5 +8,6 @@ public class SharedPreferencesConstants {
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String USER_EMAIL = "principalEmail";
     public static final String SISP_DEVICE_ID = "deviceId";
-    public static final String ENABLED_LOCATOR_PROVIDER = "enabledLocatorProvider";
+    public static final String LOCATOR_PROVIDER = "defaultLocator";
+    public static final String SISP_SERVER_HOST = "sispServerHost";
 }

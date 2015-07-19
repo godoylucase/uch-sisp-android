@@ -5,12 +5,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.widget.TextView;
 
 import com.uch.sisp.client.R;
 import com.uch.sisp.client.exception.NotLocalizableDeviceException;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Getter;
@@ -22,13 +25,18 @@ import lombok.Setter;
 @Getter @Setter
 public class LocationHelper {
 
-    LocationManager locManager;
-    Context context;
-    Dialog alertDialog;
+    private LocationManager locManager;
+    private Context context;
+    private Dialog alertDialog;
+    private TextView twLatitud;
+    private TextView twLongitud;
 
-    public LocationHelper(LocationManager locManager, Context context) {
+
+    public LocationHelper(LocationManager locManager, Context context, TextView twLatitud, TextView twLongitud) {
         this.locManager = locManager;
         this.context = context;
+        this.twLatitud = twLatitud;
+        this.twLongitud = twLongitud;
     }
 
     public void checkIfDeviceIsLocalizable() throws NotLocalizableDeviceException{
@@ -68,5 +76,10 @@ public class LocationHelper {
         if(alertDialog != null) {
             alertDialog.cancel();
         }
+    }
+
+    public void refreshScreenInfo(Location location) {
+        twLatitud.setText("Latitud: " + String.valueOf(location.getLatitude()));
+        twLongitud.setText("Longitud: " + String.valueOf(location.getLongitude()));
     }
 }

@@ -8,11 +8,14 @@
         <item>Red Móvil</item>
     </string-array>
     <string-array name="pref_list_locator_providers_values">
-        <item>1</item>
-        <item>2</item>
+        <item>gps</item>
+        <item>network</item>
     </string-array>
 
     <!-- Config para email de usuario -->
     <string name="pref_title_user_email">Ingrese Email</string>
+
+    <!-- Config host SISP -->
+    <string name="pref_title_sisp_host">SISP host:puerto</string>
 
 </resources>
