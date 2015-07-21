@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.uch.sisp.client.account.GoogleAccountHelper;
+import com.uch.sisp.client.config.SharedPreferencesConstants;
+import com.uch.sisp.client.config.SispServerURLConstants;
 import com.uch.sisp.client.exception.NotLocalizableDeviceException;
 import com.uch.sisp.client.gcm.GCMRegistrationIntentService;
 import com.uch.sisp.client.location.LocationHelper;
@@ -74,12 +76,15 @@ public class SispMainActivity extends AppCompatActivity {
 
     private void initializeApplication() {
         try {
-            // Al iniciar chequea que GPS y Localización por red estén disponibles
-            locationHelper.checkIfDeviceIsLocalizable();
+            // Inicializa la configuracion por defecto del server host
+            sharedPreferences.edit().putString(SharedPreferencesConstants.SISP_ACCESS_URL, SispServerURLConstants.SISP_ACCESS_URL).commit();
 
             // Inicializa el proveedor de GPS y arranca el proceso de actualizaciones
             String locProvider = sharedPreferences.getString(LOCATOR_PROVIDER, LocationManager.NETWORK_PROVIDER);
             locationListener = new LocationListenerImpl(locProvider, locationHelper);
+
+            // Al iniciar chequea que GPS y Localización por red estén disponibles
+            locationHelper.checkIfDeviceIsLocalizable();
 
             if (checkPlayServices()) {
                 // Inicia un IntentService para registar en GCM la aplicación.

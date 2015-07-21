@@ -9,5 +9,5 @@ public class SharedPreferencesConstants {
     public static final String USER_EMAIL = "principalEmail";
     public static final String SISP_DEVICE_ID = "deviceId";
     public static final String LOCATOR_PROVIDER = "defaultLocator";
-    public static final String SISP_SERVER_HOST = "sispServerHost";
+    public static final String SISP_ACCESS_URL = "sispServerHost";
 }

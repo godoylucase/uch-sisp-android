@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-<!--    <EditTextPreference
+    <EditTextPreference
         android:key="sispServerHost"
         android:title="@string/pref_title_sisp_host"
         android:selectAllOnFocus="true"
@@ -8,7 +8,7 @@
         android:capitalize="none"
         android:singleLine="true"
         android:maxLines="1"
-        />-->
+        />
 
     <EditTextPreference
         android:key="principalEmail"
@@ -23,7 +23,7 @@
     <ListPreference
         android:key="defaultLocator"
         android:title="@string/pref_title_default_locator_provider"
-        android:defaultValue="gps"
+        android:defaultValue="network"
         android:entries="@array/pref_list_locator_providers"
         android:entryValues="@array/pref_list_locator_providers_values"
         android:negativeButtonText="@null"

@@ -17,6 +17,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.uch.sisp.client.R;
 import com.uch.sisp.client.config.SharedPreferencesConstants;
+import com.uch.sisp.client.config.SispServerURLConstants;
 import com.uch.sisp.client.gcm.http.request.RegisterDeviceRequest;
 import com.uch.sisp.client.gcm.http.response.RegisterDeviceResponse;
 
@@ -91,11 +92,15 @@ public class GCMRegistrationIntentService extends IntentService {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         HttpEntity<?> httpEntity = new HttpEntity<RegisterDeviceRequest>(request);
 
+        StringBuilder url = (new StringBuilder(
+                sharedPreferences.getString(SharedPreferencesConstants.SISP_ACCESS_URL, SispServerURLConstants.SISP_ACCESS_URL)))
+                .append((SISP_SERVICE_REGISTER_GCM_DEVICE));
+
         try {
-            ResponseEntity<RegisterDeviceResponse> response = restTemplate.exchange(SISP_SERVICE_REGISTER_GCM_DEVICE, HttpMethod.POST, httpEntity, RegisterDeviceResponse.class);
+            ResponseEntity<RegisterDeviceResponse> response = restTemplate.exchange(url.toString(), HttpMethod.POST, httpEntity, RegisterDeviceResponse.class);
             Log.d("SISP Response: ", response.getStatusCode().toString());
             RegisterDeviceResponse responseBody = (RegisterDeviceResponse) response.getBody();
-            if(response.getStatusCode() == HttpStatus.CREATED) {
+            if (response.getStatusCode() == HttpStatus.CREATED) {
                 sharedPreferences.edit().putInt(SISP_DEVICE_ID, responseBody.getId()).apply();
                 sharedPreferences.edit().putString(USER_EMAIL, responseBody.getEmail()).apply();
                 sharedPreferences.edit().putBoolean(SharedPreferencesConstants.SENT_TOKEN_TO_SERVER, true).apply();
