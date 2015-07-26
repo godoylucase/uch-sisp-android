@@ -63,13 +63,11 @@ public class LocationHelper {
 
     private boolean hasMinimalLocators() {
         List<String> locationProvidersList = locManager.getAllProviders();
-        return locationProvidersList.contains(LocationManager.GPS_PROVIDER)
-                || locationProvidersList.contains(LocationManager.NETWORK_PROVIDER);
+        return locationProvidersList.contains(LocationManager.NETWORK_PROVIDER);
     }
 
     private boolean minimalLocatorEnabled(){
-        return locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                && locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     public void closeAlertDialog(){

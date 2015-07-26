@@ -9,7 +9,7 @@
 
     <!-- alert dialogs -->
     <string name="alert_not_active_location_title">Servicios de localización</string>
-    <string name="alert_not_active_location_message">Por favor active el GPS y los servicios de Red</string>
+    <string name="alert_not_active_location_message">Por favor active los servicios de Red</string>
 
     <!-- botones y controladores-->
     <string name="button_panic_text">Pánico</string>
