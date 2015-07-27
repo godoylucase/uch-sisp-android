@@ -95,9 +95,9 @@ public class GCMRegistrationIntentService extends IntentService {
         StringBuilder url = (new StringBuilder(
                 sharedPreferences.getString(SharedPreferencesConstants.SISP_ACCESS_URL, SispServerURLConstants.SISP_ACCESS_URL)))
                 .append((SISP_SERVICE_REGISTER_GCM_DEVICE));
-
+        ResponseEntity<RegisterDeviceResponse> response = null;
         try {
-            ResponseEntity<RegisterDeviceResponse> response = restTemplate.exchange(url.toString(), HttpMethod.POST, httpEntity, RegisterDeviceResponse.class);
+            response = restTemplate.exchange(url.toString(), HttpMethod.POST, httpEntity, RegisterDeviceResponse.class);
             Log.d("SISP Response: ", response.getStatusCode().toString());
             RegisterDeviceResponse responseBody = (RegisterDeviceResponse) response.getBody();
             if (response.getStatusCode() == HttpStatus.CREATED) {
@@ -107,6 +107,7 @@ public class GCMRegistrationIntentService extends IntentService {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+            Log.e("SISP Exception: ", e.getMessage());
         }
     }
 
