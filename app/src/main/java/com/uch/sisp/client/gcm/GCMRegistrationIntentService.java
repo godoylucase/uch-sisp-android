@@ -118,10 +118,7 @@ public class GCMRegistrationIntentService extends IntentService {
         if(deviceId != 0) {
             request.setId(deviceId);
         } else {
-            if(hardCodedEmail == null){
-                request.setEmail(intent.getStringExtra(EMAIL_INTENT_PARAMETER));
-            }
-            else {
+            if(hardCodedEmail != null){
                 request.setEmail(hardCodedEmail);
             }
         }

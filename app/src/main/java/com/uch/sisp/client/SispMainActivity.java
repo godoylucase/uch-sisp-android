@@ -109,6 +109,12 @@ public class SispMainActivity extends AppCompatActivity {
 //            if(!locationListener.getLocProvider().equals(sharedPreferences.getString(LOCATOR_PROVIDER, null))){
 //                locationListener.onProviderPreferenceChange(sharedPreferences.getString(LOCATOR_PROVIDER, null));
 //            }
+            if (checkPlayServices()) {
+                // Inicia un IntentService para registar en GCM la aplicación.
+                Intent intent = new Intent(this, GCMRegistrationIntentService.class);
+                intent.putExtra(EMAIL_INTENT_PARAMETER, GoogleAccountHelper.getPrincipalEmailAccount(this));
+                startService(intent);
+            }
         } catch (NotLocalizableDeviceException e) {
             //TODO: implementar la salida de dispositivo incompatible
             e.printStackTrace();
