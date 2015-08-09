@@ -13,6 +13,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.uch.sisp.client.R;
 import com.uch.sisp.client.SispMainActivity;
+import com.uch.sisp.client.gcm.notification.GCMNotification;
+import com.uch.sisp.client.gcm.notification.NotificationHelper;
 
 /**
  * Created by lucas on 20/06/15.
@@ -31,9 +33,9 @@ public class GCMListenerService extends GcmListenerService {
     // [START receive_message]
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        GCMNotification notification = NotificationHelper.buildPanicNotification(data);
         Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "Message: " + notification.getTitle());
 
         /**
          * Production applications would usually process the message here.
@@ -46,16 +48,11 @@ public class GCMListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        sendNotification(notification);
     }
     // [END receive_message]
 
-    /**
-     * Create and show a simple notification containing the received GCM message.
-     *
-     * @param message GCM message received.
-     */
-    private void sendNotification(String message) {
+    private void sendNotification(GCMNotification notification) {
         Intent intent = new Intent(this, SispMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -64,8 +61,8 @@ public class GCMListenerService extends GcmListenerService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_stat_ic_notification)
-                .setContentTitle("GCM Message")
-                .setContentText(message)
+                .setContentTitle(notification.getTitle())
+                .setContentText(notification.getBody())
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);

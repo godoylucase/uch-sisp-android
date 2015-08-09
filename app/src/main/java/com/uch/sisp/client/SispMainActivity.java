@@ -106,9 +106,6 @@ public class SispMainActivity extends AppCompatActivity {
             locationHelper.checkIfDeviceIsLocalizable();
             LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                     new IntentFilter(REGISTRATION_COMPLETE));
-//            if(!locationListener.getLocProvider().equals(sharedPreferences.getString(LOCATOR_PROVIDER, null))){
-//                locationListener.onProviderPreferenceChange(sharedPreferences.getString(LOCATOR_PROVIDER, null));
-//            }
             if (checkPlayServices()) {
                 // Inicia un IntentService para registar en GCM la aplicación.
                 Intent intent = new Intent(this, GCMRegistrationIntentService.class);

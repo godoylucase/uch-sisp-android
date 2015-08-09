@@ -5,7 +5,7 @@ package com.uch.sisp.client.config;
  */
 public class SispServerURLConstants {
     public static final String SISP_PROTOCOL = "http://";
-    public static final String SISP_HOST = "192.168.0.2";
+    public static final String SISP_HOST = "192.168.0.13";
     public static final String SISP_PORT = ":9090";
     public static final String SISP_CONTEXT = "/uch-server-sisp";
     public static final String SISP_URL = SISP_PROTOCOL + SISP_HOST + SISP_PORT;
