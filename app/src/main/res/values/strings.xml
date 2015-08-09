@@ -20,5 +20,6 @@
 
     <!-- menues -->
     <string name="menu_ajustes_text">Ajustes</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
