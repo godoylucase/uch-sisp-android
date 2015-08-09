@@ -13,6 +13,7 @@
 
     <!-- botones y controladores-->
     <string name="button_panic_text">Pánico</string>
+    <string name="button_take_care_of_me_text">Cuidame</string>
 
     <!-- textos -->
     <string name="text_view_latitud">Latitud: (sin_datos)</string>

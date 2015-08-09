@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.uch.sisp.client.account.GoogleAccountHelper;
 import com.uch.sisp.client.config.SharedPreferencesConstants;
 import com.uch.sisp.client.config.SispServerURLConstants;
@@ -42,6 +44,8 @@ public class SispMainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private TextView twLatitud;
     private TextView twLongitud;
+    private boolean mShowMap;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,10 @@ public class SispMainActivity extends AppCompatActivity {
             locationHelper.checkIfDeviceIsLocalizable();
 
             if (checkPlayServices()) {
+                if(initMap()) {
+
+                }
+
                 // Inicia un IntentService para registar en GCM la aplicación.
                 Intent intent = new Intent(this, GCMRegistrationIntentService.class);
                 intent.putExtra(EMAIL_INTENT_PARAMETER, GoogleAccountHelper.getPrincipalEmailAccount(this));
@@ -96,6 +104,14 @@ public class SispMainActivity extends AppCompatActivity {
             //TODO: implementar la salida de dispositivo incompatible
             e.printStackTrace();
         }
+    }
+
+    private boolean initMap() {
+        if(mMap == null) {
+            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+            mMap = mapFragment.getMap();
+        }
+        return (mMap != null);
     }
 
     @Override
