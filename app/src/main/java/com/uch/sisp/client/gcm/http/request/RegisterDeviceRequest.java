@@ -10,7 +10,7 @@ import lombok.Setter;
  * Created by lucas on 23/06/15.
  */
 @Getter @Setter
-public class RegisterDeviceRequest implements Serializable
+public class RegisterDeviceRequest extends GenericRequest implements Serializable
 {
     private int id;
     private String email;
