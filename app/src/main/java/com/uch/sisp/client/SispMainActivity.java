@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ public class SispMainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private TextView twLatitud;
     private TextView twLongitud;
+    private Button btPanic;
     private boolean mShowMap;
     private GoogleMap mMap;
 
@@ -76,6 +79,13 @@ public class SispMainActivity extends AppCompatActivity {
     private void initializeUIComponents() {
         twLatitud = (TextView) findViewById(R.id.text_view_latitud);
         twLongitud = (TextView) findViewById(R.id.text_view_longitud);
+        btPanic = (Button)  findViewById(R.id.button_panic);
+        btPanic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void initializeApplication() {

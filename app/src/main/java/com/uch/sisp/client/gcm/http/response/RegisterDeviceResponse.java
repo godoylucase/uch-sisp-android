@@ -9,11 +9,8 @@ import lombok.Setter;
  * Created by lucas on 23/06/15.
  */
 @Getter @Setter
-public class RegisterDeviceResponse extends GenericResponse implements Serializable {
-
+public class RegisterDeviceResponse implements GenericResponse, Serializable {
     private int id;
     private String email;
     private String registerId;
-
-
 }

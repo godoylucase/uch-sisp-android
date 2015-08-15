@@ -12,8 +12,10 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.uch.sisp.client.R;
 import com.uch.sisp.client.config.SharedPreferencesConstants;
-import com.uch.sisp.client.gcm.http.GCMHttpRequestSyncTask;
-import com.uch.sisp.client.gcm.http.request.SispServicesTags;
+import com.uch.sisp.client.gcm.http.connection.SispServicesTags;
+import com.uch.sisp.client.gcm.http.connection.GCMHttpRequestSyncTask;
+import com.uch.sisp.client.gcm.http.connection.bundle.HttpElementsBundle;
+import com.uch.sisp.client.gcm.http.connection.bundle.HttpRegisterDeviceElementsBundle;
 
 import java.io.IOException;
 
@@ -45,8 +47,11 @@ public class GCMRegistrationIntentService extends IntentService {
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 Log.i(TAG, "GCM Registration Token: " + token);
 
-                GCMHttpRequestSyncTask gcmSispConnector = new GCMHttpRequestSyncTask();
-                gcmSispConnector.processRequest(sharedPreferences, token);
+                HttpRegisterDeviceElementsBundle bundle = new HttpRegisterDeviceElementsBundle(SispServicesTags.REGISTER
+                        , sharedPreferences, token);
+
+                GCMHttpRequestSyncTask gcmConnection = new GCMHttpRequestSyncTask(bundle);
+                gcmConnection.processRequest();
 
                 // Subscribe to topic channels
                 subscribeTopics(token);

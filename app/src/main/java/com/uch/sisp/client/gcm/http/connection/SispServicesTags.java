@@ -1,4 +1,4 @@
-package com.uch.sisp.client.gcm.http.request;
+package com.uch.sisp.client.gcm.http.connection;
 
 /**
  * Created by lucas on 10/08/15.
