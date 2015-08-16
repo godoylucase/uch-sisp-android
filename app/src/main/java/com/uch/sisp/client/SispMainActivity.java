@@ -27,11 +27,20 @@ import com.uch.sisp.client.config.SharedPreferencesConstants;
 import com.uch.sisp.client.config.SispServerURLConstants;
 import com.uch.sisp.client.exception.NotLocalizableDeviceException;
 import com.uch.sisp.client.gcm.GCMRegistrationIntentService;
+import com.uch.sisp.client.gcm.http.connection.GCMHttpPanicRequestStandAloneThread;
+import com.uch.sisp.client.gcm.http.connection.GCMHttpRequestSyncTask;
+import com.uch.sisp.client.gcm.http.connection.SispServicesTags;
+import com.uch.sisp.client.gcm.http.connection.bundle.HttpPanicElementsBundle;
 import com.uch.sisp.client.location.LocationHelper;
 import com.uch.sisp.client.location.LocationListenerImpl;
+import com.uch.sisp.client.maps.MapHelper;
 
-import static com.uch.sisp.client.config.IntentConstants.*;
-import static com.uch.sisp.client.config.SharedPreferencesConstants.*;
+import org.apache.commons.lang3.StringUtils;
+
+import static com.uch.sisp.client.config.IntentConstants.EMAIL_INTENT_PARAMETER;
+import static com.uch.sisp.client.config.SharedPreferencesConstants.LOCATOR_PROVIDER;
+import static com.uch.sisp.client.config.SharedPreferencesConstants.REGISTRATION_COMPLETE;
+import static com.uch.sisp.client.config.SharedPreferencesConstants.SENT_TOKEN_TO_SERVER;
 
 
 public class SispMainActivity extends AppCompatActivity {
@@ -55,7 +64,7 @@ public class SispMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sisp_main);
         initializeUIComponents();
-        locationHelper = new LocationHelper((LocationManager)getSystemService(LOCATION_SERVICE), this, twLatitud, twLongitud);
+        locationHelper = new LocationHelper((LocationManager) getSystemService(LOCATION_SERVICE), this, twLatitud, twLongitud);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // BroadcasReceiver se dispara tras recibir el token de GCM y ser enviado al server SISP
@@ -79,13 +88,18 @@ public class SispMainActivity extends AppCompatActivity {
     private void initializeUIComponents() {
         twLatitud = (TextView) findViewById(R.id.text_view_latitud);
         twLongitud = (TextView) findViewById(R.id.text_view_longitud);
-        btPanic = (Button)  findViewById(R.id.button_panic);
+        btPanic = (Button) findViewById(R.id.button_panic);
+
         btPanic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                HttpPanicElementsBundle bundle = new HttpPanicElementsBundle(SispServicesTags.PANIC
+                        , sharedPreferences, locationHelper, getApplicationContext());
+                GCMHttpPanicRequestStandAloneThread thread = new GCMHttpPanicRequestStandAloneThread();
+                thread.execute(bundle);
             }
         });
+
     }
 
     private void initializeApplication() {
@@ -101,8 +115,16 @@ public class SispMainActivity extends AppCompatActivity {
             locationHelper.checkIfDeviceIsLocalizable();
 
             if (checkPlayServices()) {
-                if(initMap()) {
-
+                if (initMap()) {
+                    Bundle panicExtras = getIntent().getExtras();
+                    if (panicExtras != null) {
+                        String panicDataLatitude = panicExtras.getString("latitude");
+                        String panicDataLongitude = panicExtras.getString("longitude");
+                        String panicOrigin = panicExtras.getString("origin");
+                        if (!StringUtils.isBlank(panicDataLatitude) && !StringUtils.isBlank(panicDataLongitude)) {
+                            MapHelper.moveToPanicNotification(getApplicationContext(), mMap, panicOrigin, panicDataLatitude, panicDataLongitude);
+                        }
+                    }
                 }
 
                 // Inicia un IntentService para registar en GCM la aplicación.
@@ -117,7 +139,7 @@ public class SispMainActivity extends AppCompatActivity {
     }
 
     private boolean initMap() {
-        if(mMap == null) {
+        if (mMap == null) {
             MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
             mMap = mapFragment.getMap();
         }

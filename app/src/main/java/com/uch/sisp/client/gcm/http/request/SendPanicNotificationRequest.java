@@ -11,6 +11,7 @@ import lombok.Setter;
  * Created by lucas on 15/08/15.
  */
 @Getter @Setter
-public class PanicRequest implements GenericRequest, Serializable {
-    GPSPosition position;
+public class SendPanicNotificationRequest implements GenericRequest, Serializable {
+    private int id;
+    private GPSPosition position;
 }

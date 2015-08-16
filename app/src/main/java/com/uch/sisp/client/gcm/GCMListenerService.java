@@ -15,13 +15,14 @@ import com.uch.sisp.client.R;
 import com.uch.sisp.client.SispMainActivity;
 import com.uch.sisp.client.gcm.notification.GCMNotification;
 import com.uch.sisp.client.gcm.notification.NotificationHelper;
+import com.uch.sisp.client.gcm.notification.PanicGCMNotification;
 
 /**
  * Created by lucas on 20/06/15.
  */
 public class GCMListenerService extends GcmListenerService {
 
-    private static final String TAG = "MyGcmListenerService";
+    private static final String TAG = "GcmListenerService";
 
     /**
      * Called when message is received.
@@ -38,13 +39,6 @@ public class GCMListenerService extends GcmListenerService {
         Log.d(TAG, "Message: " + notification.getTitle());
 
         /**
-         * Production applications would usually process the message here.
-         * Eg: - Syncing with server.
-         *     - Store message in local database.
-         *     - Update UI.
-         */
-
-        /**
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
@@ -55,17 +49,24 @@ public class GCMListenerService extends GcmListenerService {
     private void sendNotification(GCMNotification notification) {
         Intent intent = new Intent(this, SispMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // extrae los datos de la posicion y los pasa como extras en el intent, solo a fines de demo
+        PanicGCMNotification panicNotification = (PanicGCMNotification) notification;
+        intent.putExtra("latitude", panicNotification.getLatitude());
+        intent.putExtra("longitude", panicNotification.getLongitude());
+        intent.putExtra("origin", panicNotification.getBody());
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_stat_ic_notification)
                 .setContentTitle(notification.getTitle())
                 .setContentText(notification.getBody())
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

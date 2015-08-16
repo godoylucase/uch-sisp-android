@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter @Getter
 public class PanicGCMNotification extends GCMNotification {
     private String latitude;
-    private String altitude;
+    private String longitude;
 
     public PanicGCMNotification() {
         super();

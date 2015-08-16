@@ -12,7 +12,7 @@ public class NotificationHelper {
         notification.setTitle(data.getString("title"));
         notification.setBody(data.getString("body"));
         notification.setLatitude(data.getString("latitude"));
-        notification.setAltitude(data.getString("altitude"));
+        notification.setLongitude(data.getString("longitude"));
         return notification;
     }
 }

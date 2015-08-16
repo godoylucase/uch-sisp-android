@@ -27,11 +27,11 @@ public abstract class GenericGCMHttpRequestSyncTask implements GCMHttpRequestInt
         try {
             Pair<GenericRequest, String> requestAndUrl = HttpRequestHelper.prepareSispGcmRequestAndUrl(bundle);
             httpEntity = setRequestToRestTemplate(requestAndUrl.getKey());
-            response = SispRestComunicationExecutor.execute(restTemplate, requestAndUrl.getValue(), HttpMethod.POST, httpEntity);
+            response = SispRestComunicationExecutor.execute(restTemplate, requestAndUrl.getValue(),
+                    bundle.getServiceTag().getHttpMethod(), httpEntity);
             Log.d("SISP Response: ", response.getStatusCode().toString());
         } catch (Throwable e) {
             e.printStackTrace();
-            Log.e("SISP Exception: ", e.getMessage());
         }
         return response;
     }

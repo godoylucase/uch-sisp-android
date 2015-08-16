@@ -30,6 +30,8 @@ public class LocationHelper {
     private Dialog alertDialog;
     private TextView twLatitud;
     private TextView twLongitud;
+    private double latitude;
+    private double longitude;
 
 
     public LocationHelper(LocationManager locManager, Context context, TextView twLatitud, TextView twLongitud) {
@@ -77,7 +79,9 @@ public class LocationHelper {
     }
 
     public void refreshScreenInfo(Location location) {
-        twLatitud.setText("Latitud: " + String.valueOf(location.getLatitude()));
-        twLongitud.setText("Longitud: " + String.valueOf(location.getLongitude()));
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        twLatitud.setText("Latitud: " + String.valueOf(latitude));
+        twLongitud.setText("Longitud: " + String.valueOf(longitude));
     }
 }

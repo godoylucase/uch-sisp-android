@@ -1,7 +1,8 @@
 package com.uch.sisp.client.gcm.http.connection;
 
-import com.uch.sisp.client.gcm.http.request.PanicRequest;
+import com.uch.sisp.client.gcm.http.request.SendPanicNotificationRequest;
 import com.uch.sisp.client.gcm.http.request.RegisterDeviceRequest;
+import com.uch.sisp.client.gcm.http.response.SendPanicNotificationResponse;
 import com.uch.sisp.client.gcm.http.response.RegisterDeviceResponse;
 
 import org.springframework.http.HttpEntity;
@@ -20,8 +21,8 @@ public class SispRestComunicationExecutor {
 
         if(httpEntity.getBody() instanceof RegisterDeviceRequest) {
             response = restTemplate.exchange(url, httpMethod, httpEntity, RegisterDeviceResponse.class);
-        } else if(httpEntity.getBody() instanceof PanicRequest) {
-            // TODO: implementar
+        } else if(httpEntity.getBody() instanceof SendPanicNotificationRequest) {
+            response = restTemplate.exchange(url, httpMethod, httpEntity, SendPanicNotificationResponse.class);
         }
         return response;
     }

@@ -5,6 +5,8 @@
     <string name="registering_message">Generando InstanceID token...</string>
     <string name="token_error_message">Un error ha ocurrido obteniendo el InstanceID token o
         enviando el token al servidor, reinicie la aplicación.</string>
+    <string name="sent_panic">Solicitud de pánico enviada</string>
+    <string name="no_sent_panic">Solicitud de pánico NO enviada</string>
 
 
     <!-- alert dialogs -->
