@@ -29,7 +29,7 @@ public class MapHelper {
     private static void moveCamera(GoogleMap mMap, LatLng position) {
         CameraPosition camPos = new CameraPosition.Builder()
                 .target(position)   //Centramos el mapa en el punto
-                .zoom(19)           //Establecemos el zoom en 19
+                .zoom(15)           //Establecemos el zoom en 19
                 .tilt(70)           //Bajamos el punto de vista de la cámara 70 grados
                 .build();
         CameraUpdate cameraPosition = CameraUpdateFactory.newCameraPosition(camPos);
@@ -54,7 +54,7 @@ public class MapHelper {
         String streetName = getAddressForLocation(context, position);
         map.addMarker(new MarkerOptions()
                 .position(position)
-                .title("Notificación de Panico de: " + origin)
+                .title("Pánico\n" + origin)
                 .snippet("Ocurrió en: " + streetName));
     }
 }

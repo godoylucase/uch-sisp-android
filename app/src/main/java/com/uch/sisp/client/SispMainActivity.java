@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -56,8 +57,10 @@ public class SispMainActivity extends AppCompatActivity {
     private TextView twLatitud;
     private TextView twLongitud;
     private Button btPanic;
+    private Button btTakeCareOfMe;
     private boolean mShowMap;
     private GoogleMap mMap;
+    private TakeCareButtonCountDown countDown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class SispMainActivity extends AppCompatActivity {
         twLatitud = (TextView) findViewById(R.id.text_view_latitud);
         twLongitud = (TextView) findViewById(R.id.text_view_longitud);
         btPanic = (Button) findViewById(R.id.button_panic);
+        btTakeCareOfMe = (Button) findViewById(R.id.button_take_care_of_me);
 
         btPanic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +101,25 @@ public class SispMainActivity extends AppCompatActivity {
                         , sharedPreferences, locationHelper, getApplicationContext());
                 GCMHttpPanicRequestStandAloneThread thread = new GCMHttpPanicRequestStandAloneThread();
                 thread.execute(bundle);
+            }
+        });
+
+        btTakeCareOfMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HttpPanicElementsBundle bundle = new HttpPanicElementsBundle(SispServicesTags.PANIC
+                        , sharedPreferences, locationHelper, getApplicationContext());
+                countDown = new TakeCareButtonCountDown(10000, 1000, btTakeCareOfMe, bundle);
+                countDown.start();
+            }
+        });
+
+        btTakeCareOfMe.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                countDown.cancel();
+                btTakeCareOfMe.setText(R.string.button_take_care_of_me_text);
+                return true;
             }
         });
 

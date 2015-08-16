@@ -38,7 +38,7 @@
         android:layout_column="0" />
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="55dp"
         android:text="@string/button_take_care_of_me_text"
         android:id="@+id/button_take_care_of_me"
